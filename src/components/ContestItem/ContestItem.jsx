@@ -1,7 +1,8 @@
+import { Link } from "react-router-dom";
 
 
 const ContestItem = ({item}) => {
-    const {contestName, image, numberOfParticipants, tags, contestDescription} = item;
+    const {_id, contestName, image, numberOfParticipants, tags, contestDescription} = item;
 
 
     return (
@@ -9,14 +10,17 @@ const ContestItem = ({item}) => {
             
             <div className="relative">
             <img className="w-[200px] h-[180px] object-cover"  src={image} alt="" />
-            <div className="badge  absolute top-0 right-0 bg-slate-400">{numberOfParticipants}</div>
+            <div className="badge bg-purple-200 absolute top-0 right-0">participants: {numberOfParticipants}</div>
             </div>
             <div className="space-y-3">
-                <h3> <span className="font-semibold">Name of the Contest:</span> {contestName}</h3>
-                <p><span className="font-semibold">Description:</span>{contestDescription}</p>
-                <p><span className="font-semibold">Tags:</span>{tags}</p>
-               
+                <h3> <span className="font-semibold">Name of the Contest: </span> {contestName}</h3>
+                <p><span className="font-semibold">Description: </span>{contestDescription}</p>
+                <p><span className="font-semibold">Tags: </span>{tags}</p>
+               <Link to={`/contests/${_id}`}>
             <button className="rounded-full bg-purple-400 font-bold py-2 px-3">View Detail</button>
+            </Link>
+            
+                                                           
             </div>
             
         </div>

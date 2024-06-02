@@ -1,11 +1,10 @@
 import { createBrowserRouter  } from "react-router-dom";
 import Main from "../layout/Main";
 import Home from "../pages/Home/Home";
-import Menu from "../pages/Menu/Menu";
+
 import Order from "../pages/Order/Order/Order";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
-import Secret from "../components/Navbar/Secret/Secret";
 import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../layout/Dashboard";
 import Cart from "../pages/Dashboard/Cart/Cart";
@@ -20,6 +19,7 @@ import UserHome from "../pages/Dashboard/UserHome/UserHome";
 import AdminHome from "../pages/Dashboard/AdminHome/AdminHome";
 import CreatorRoute from "./CreatorRoute";
 import ErrorPage from "../components/ErrorPage/ErrorPage";
+import Detail from "../components/Detail/Detail";
 
 
 const router = createBrowserRouter([
@@ -32,13 +32,14 @@ const router = createBrowserRouter([
             index: true,
             element: <Home></Home>
         },
-        {
-          path: "/menu",
-            element: <Menu></Menu>
-        },
+      
         {
           path: "/order/:category",
             element: <Order></Order>
+        },
+        {
+          path: "/contests/:id",
+            element: <Detail></Detail>
         },
         {
           path: "/login",
@@ -48,10 +49,7 @@ const router = createBrowserRouter([
           path: "/register",
             element: <Register></Register>
         },
-        {
-          path: 'secret',
-          element:<PrivateRoute><Secret></Secret></PrivateRoute>  
-        }
+      
       ]
     },
     // new r 1ta layout

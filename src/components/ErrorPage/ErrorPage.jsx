@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
-import errorimg from "../../assets/error.png";
+import errorimg from "../../assets/404.gif";
 
 const ErrorPage = () => {
   const navigate = useNavigate();
