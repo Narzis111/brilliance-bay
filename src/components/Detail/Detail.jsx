@@ -33,36 +33,37 @@ const Detail = () => {
     return (
         <div>
             <div>
-                         </div>
+            </div>
             <div className="hero min-h-screen">
                 <div className="hero-content flex-col lg:flex-row">
                     <div className="w-[320px] h-[300px]">
                         <img className="w-full h-full" src={image} alt={contestName} />
                     </div>
-                    <div  className="space-y-6 ml-4">
-                        
-                            <h1 className="text-2xl font-bold">Title: {contestName}</h1>
-                       
-                        
-                            <h1>Category: {tags}</h1>
-                        
-                            <h1>Total Participants: {numberOfParticipants}</h1>
-                    
-                       
-                            <p>Detail: {contestDescription}</p>
-                            <p>Detail: {contestDeadline}</p>
-                            <p>Detail: {prizeMoney}</p>
-                       
-                        
-                            <p>Date: {taskSubmissionInstructions}</p>
-                      
+                    <div className="space-y-6 ml-4">
+
+                        <h1 className="text-2xl font-bold">Title: {contestName}</h1>
+
+
+                        <h1>Category: {tags}</h1>
+
+                        <h1>Total Participants: {numberOfParticipants}</h1>
+
+
+                        <p>Detail: {contestDescription}</p>
+                        <p>Date: {contestDeadline}</p>
+                        <p>Reward: {prizeMoney}</p>
+                        <p>Price: {contestPrice}</p>
+
+
+                        <p>Date: {taskSubmissionInstructions}</p>
+
                         {/* {user?.email !== creator_email && ( */}
                         {user?.email && (
                             <Link to={`/take/${_id}`}>
                                 <button className="btn btn-primary text-white mt-3">Take Assignment</button>
                             </Link>
-                        ) }
-                        
+                        )}
+
                     </div>
                 </div>
             </div>

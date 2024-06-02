@@ -1,7 +1,6 @@
 import { createBrowserRouter  } from "react-router-dom";
 import Main from "../layout/Main";
 import Home from "../pages/Home/Home";
-
 import Order from "../pages/Order/Order/Order";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
@@ -20,6 +19,7 @@ import AdminHome from "../pages/Dashboard/AdminHome/AdminHome";
 import CreatorRoute from "./CreatorRoute";
 import ErrorPage from "../components/ErrorPage/ErrorPage";
 import Detail from "../components/Detail/Detail";
+import AllContests from "../pages/AllContents/AllContests";
 
 
 const router = createBrowserRouter([
@@ -34,12 +34,16 @@ const router = createBrowserRouter([
         },
       
         {
-          path: "/order/:category",
-            element: <Order></Order>
-        },
-        {
           path: "/contests/:id",
             element: <Detail></Detail>
+        },
+        {
+          path: "/all-contests",
+            element: <AllContests></AllContests>
+        },
+        {
+          path: "/order/:category",
+            element: <Order></Order>
         },
         {
           path: "/login",
