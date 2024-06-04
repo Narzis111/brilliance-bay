@@ -1,144 +1,177 @@
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import useAuth from "../../../hooks/useAuth/useAuth";
-import useCart from "../../../hooks/useCart";
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
+// import './CheckoutForm.css'
+import { ImSpinner9 } from 'react-icons/im'
+import { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
+import useAxiosSecure from '../../../hooks/useAxiosSecure'
+import useAuth from '../../../hooks/useAuth/useAuth'
+import { toast } from 'react-toastify'
+const CheckoutForm = ({ closeModal, bookingInfo, refetch }) => {
+  const stripe = useStripe()
+  const elements = useElements()
+  const axiosSecure = useAxiosSecure()
+  const navigate = useNavigate()
+  const { user } = useAuth()
+  const [clientSecret, setClientSecret] = useState()
+  const [cardError, setCardError] = useState('')
+  const [processing, setProcessing] = useState(false)
+
+  useEffect(() => {
+    // fetch client secret
+    if (bookingInfo?.price && bookingInfo?.price > 1) {
+      getClientSecret({ price : bookingInfo?.price })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bookingInfo?.price])
+console.log( bookingInfo?.price );
+  //   get clientSecret
+  const getClientSecret = async price => {
+    const { data } = await axiosSecure.post(`/create-payment-intent`, price)
+    console.log('clientSecret from server--->', data)
+    setClientSecret(data.clientSecret)
+  }
 
 
-const CheckoutForm = () => {
-    const [error, setError] = useState('');
-    const [clientSecret, setClientSecret] = useState('')
-    const [transactionId, setTransactionId] = useState('');
-    // hooks from stripe
-    const stripe = useStripe();
-    const elements = useElements();
-
-    const axiosSecure = useAxiosSecure();
-    const { user } = useAuth();
-    const [cart, refetch] = useCart();
-    const navigate = useNavigate();
-
-    // total price thakte hobe & user loggedin thakte hobe tai axios secure use korbo & total price ber kore nibo
-
-    const totalPrice = cart.reduce((total, item) => total + item.price, 0)
-
-    useEffect(() => {
-        if (totalPrice > 0) {
-            axiosSecure.post('/create-payment-intent', { price: totalPrice })
-                .then(res => {
-                    console.log(res.data.clientSecret);
-                    setClientSecret(res.data.clientSecret);
-                })
-        }
-
-    }, [axiosSecure, totalPrice])
-
-    // on submit details error handling
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        if (!stripe || !elements) {
-            return
-        }
-
-        const card = elements.getElement(CardElement)
-
-        if (card === null) {
-            return
-        }
-
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-            type: 'card',
-            card
-        })
-
-        if (error) {
-            console.log('payment error', error);
-            setError(error.message);
-        }
-        else {
-            console.log('payment method', paymentMethod)
-            setError('');
-        }
-
-        // confirm card payment 
-        const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: card,
-                billing_details: {
-                    email: user?.email || 'anonymous',
-                    name: user?.displayName || 'anonymous'
-                }
-            }
-        })
-
-        if (confirmError) {
-            console.log('confirm error')
-        }
-        else {
-            console.log('payment intent', paymentIntent)
-            if (paymentIntent.status === 'succeeded') {
-                console.log('transaction id', paymentIntent.id);
-                setTransactionId(paymentIntent.id);
-
-                // now save the payment in the database
-                const payment = {
-                    email: user.email,
-                    price: totalPrice,
-                    transactionId: paymentIntent.id,
-                    date: new Date(), // utc date convert. use moment js to 
-                     cartIds: cart.map(item => item._id),
-                    menuItemIds: cart.map(item => item.menuId),
-                    status: 'pending'
-                }
-
-                const res = await axiosSecure.post('/payments', payment);
-                console.log('payment saved', res.data);
-                refetch();
-                if (res.data?.paymentResult?.insertedId) {
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: "Thank you for the taka paisa",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    navigate('/dashboard/paymentHistory')
-                }
-
-            }
-        }
-
+  const handleSubmit = async event => {
+    // Block native form submission.
+    event.preventDefault()
+    setProcessing(true)
+    if (!stripe || !elements) {
+      // Stripe.js has not loaded yet. Make sure to disable
+      // form submission until Stripe.js has loaded.
+      return
     }
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <CardElement
-                options={{
-                    style: {
-                        base: {
-                            fontSize: '16px',
-                            color: '#424770',
-                            '::placeholder': {
-                                color: '#aab7c4',
-                            },
-                        },
-                        invalid: {
-                            color: '#9e2146',
-                        },
-                    },
-                }}
-            />
-            <button className="btn btn-sm btn-primary my-4" type="submit" disabled={!stripe || !clientSecret}>
-                Pay
-            </button>
-            <p className="text-red-600">{error}</p>
-            {transactionId && <p className="text-green-600"> Your transaction id: {transactionId}</p>}
-        </form>
-    );
-};
+    // Get a reference to a mounted CardElement. Elements knows how
+    // to find your CardElement because there can only ever be one of
+    // each type of element.
+    const card = elements.getElement(CardElement)
 
-export default CheckoutForm;
+    if (card == null) {
+      return
+    }
+
+    // Use your card Element with other Stripe.js APIs
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: 'card',
+      card,
+    })
+
+    if (error) {
+      console.log('[error]', error)
+      setCardError(error.message)
+      setProcessing(false)
+      return
+    } else {
+      console.log('[PaymentMethod]', paymentMethod)
+      setCardError('')
+    }
+
+    // confirm payment
+    const { error: confirmError, paymentIntent } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            email: user?.email,
+            name: user?.displayName,
+          },
+        },
+      })
+
+    if (confirmError) {
+      console.log(confirmError)
+      setCardError(confirmError.message)
+      setProcessing(false)
+      return
+    }
+
+    if (paymentIntent.status === 'succeeded') {
+      console.log(paymentIntent)
+      // 1. Create payment info object
+      const paymentInfo = {
+        ...bookingInfo,
+        contentId: bookingInfo._id,
+        transactionId: paymentIntent.id,
+        date: new Date(),
+      }
+      delete paymentInfo._id
+      console.log(paymentInfo)
+      try {
+        // 2. save payment info in booking collection (db)
+        const { data } = await axiosSecure.post('/booking', paymentInfo)
+        console.log(data)
+
+        // 3. change room status to booked in db
+        await axiosSecure.patch(`/contests/status/${bookingInfo?._id}`, {
+          status: true,
+        })
+
+        // update ui
+        refetch()
+        closeModal()
+        toast.success('Room Booked Successfully')
+        navigate('/dashboard/my-bookings')
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    setProcessing(false)
+  }
+
+  return (
+    <>
+      {' '}
+      <form onSubmit={handleSubmit}>
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: '16px',
+                color: '#424770',
+                '::placeholder': {
+                  color: '#aab7c4',
+                },
+              },
+              invalid: {
+                color: '#9e2146',
+              },
+            },
+          }}
+        />
+
+        <div className='flex mt-2 justify-around'>
+          <button
+            disabled={!stripe || !clientSecret || processing}
+            type='submit'
+            className='inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2'
+          >
+            {processing ? (
+              <ImSpinner9 className='animate-spin m-auto' size={24} />
+            ) : (
+              `Pay ${bookingInfo?.price}`
+            )}
+          </button>
+          <button
+            onClick={closeModal}
+            type='button'
+            className='inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2'
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+      {cardError && <p className='text-red-600 ml-8'>{cardError}</p>}
+    </>
+  )
+}
+
+CheckoutForm.propTypes = {
+  bookingInfo: PropTypes.object,
+  closeModal: PropTypes.func,
+  refetch: PropTypes.func,
+}
+
+export default CheckoutForm

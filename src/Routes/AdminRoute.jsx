@@ -1,22 +1,18 @@
-import { Navigate, useLocation } from "react-router-dom";
-import useAdmin from "../hooks/useAdmin";
-import useAuth from "../hooks/useAuth/useAuth";
+import { Navigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import useRole from '../hooks/useRole'
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
 
 const AdminRoute = ({ children }) => {
-    const { user, loading } = useAuth();
-    const [isAdmin, isAdminLoading] = useAdmin();
-    const location = useLocation();
+  const [role, isLoading] = useRole()
 
-    if (loading || isAdminLoading) {
-        return <progress className="progress w-56"></progress>
-    }
+  if (isLoading) return <LoadingSpinner />
+  if (role === 'admin') return children
+  return <Navigate to='/dashboard' />
+}
 
-    if (user && isAdmin) {
-        return children;
-    }
+export default AdminRoute
 
-    return <Navigate to="/" state={{ from: location }} replace></Navigate>
-
-};
-
-export default AdminRoute;
+AdminRoute.propTypes = {
+  children: PropTypes.element,
+}

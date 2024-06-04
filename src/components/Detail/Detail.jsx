@@ -1,13 +1,24 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
+import BookingModal from "../BookingModal/BookingModal";
+import Button from "../Button/Button";
 import useAuth from "../../hooks/useAuth/useAuth";
 // import { Zoom } from "react-awesome-reveal";
 
 const Detail = () => {
     const { id } = useParams();
+    const {user} = useAuth();
 
+    const [isOpen, setIsOpen] = useState(false)
     const [views, setViews] = useState(null);
+    
+  const closeModal = () => {
+    setIsOpen(false)
+  }
+
+
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -23,12 +34,7 @@ const Detail = () => {
 
 
     const { _id, contestName, contestPrice, prizeMoney, taskSubmissionInstructions, contestDeadline, image, numberOfParticipants, tags, contestDescription } = views || {};
-    const { user } = useAuth() || {};
 
-    // const handleTake = (_id, creator_email) => {
-    //     console.log(_id);
-    //     console.log(creator_email);
-    // };
 
     return (
         <div>
@@ -52,22 +58,35 @@ const Detail = () => {
                         <p>Detail: {contestDescription}</p>
                         <p>Date: {contestDeadline}</p>
                         <p>Reward: {prizeMoney}</p>
-                        <p>Price: {contestPrice}</p>
+                        <p>Instruction: {taskSubmissionInstructions}</p>
 
+                      
+                         <hr />
+      <div className='p-4'>
+        <Button onClick={() => setIsOpen(true)} label={'Registration'} />
+      </div>
 
-                        <p>Date: {taskSubmissionInstructions}</p>
-
-                        {/* {user?.email !== creator_email && ( */}
-                        {user?.email && (
-                            <Link to={`/take/${_id}`}>
-                                <button className="btn btn-primary text-white mt-3">Take Assignment</button>
-                            </Link>
-                        )}
+      {/* Modal */}
+      <BookingModal
+        isOpen={isOpen}
+        closeModal={closeModal}
+        bookingInfo={{
+          ...views,
+          price: contestPrice,
+          user: { name: user?.displayName },
+        }}
+      />
+      <hr />
+      <div className='p-4 flex items-center justify-between font-semibold text-lg'>
+        <div>Total</div>
+        <div>${contestPrice}</div>
+      </div>
+    </div>
 
                     </div>
                 </div>
             </div>
-        </div>
+       
     );
 };
 

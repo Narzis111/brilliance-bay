@@ -1,138 +1,142 @@
-import { useForm } from 'react-hook-form';
-import { Link, NavLink } from 'react-router-dom';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
-import useAuth from '../../hooks/useAuth/useAuth';
-import SocialLogin from '../../components/SocialLogin/SocialLogin';
-import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
-import { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
-
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { FcGoogle } from 'react-icons/fc'
+import { TbFidgetSpinner } from 'react-icons/tb'
+import useAuth from '../../hooks/useAuth/useAuth'
+import { toast } from 'react-toastify'
 
 const Login = () => {
-    const [disabled, setDisabled] = useState(true);
-    const { logInUser } = useAuth();
-    const { register, handleSubmit, formState: { errors } } = useForm();
+  const location = useLocation()
+  const navigate = useNavigate()
+  const from = location?.state || '/'
 
-    //   // navigation systems
-    const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+  const { googleLogin, logInUser, loading, setLoading,  } =
+    useAuth()
+    
 
-    useEffect(() => {
-        loadCaptchaEnginge(6);
-    }, [])
+  const handleSubmit = async e => {
+    e.preventDefault()
+    const form = e.target
+    const email = form.email.value
+    const password = form.password.value
 
-    const onSubmit = (data) => {
-        const { email, password } = data;
-
-        // log in user
-        logInUser(email, password)
-            .then((result) => {
-                console.log(result.user);
-                if (!result || !result.user) {
-                    Swal.fire({
-                        title: 'Invalid email or password',
-                        showClass: {
-                            popup: 'animate__animated animate__fadeInDown'
-                        },
-                        hideClass: {
-                            popup: 'animate__animated animate__fadeOutUp'
-                        }
-                    });
-                }
-
-                Swal.fire({
-                    title: 'User Login Successful.',
-                    showClass: {
-                        popup: 'animate__animated animate__fadeInDown'
-                    },
-                    hideClass: {
-                        popup: 'animate__animated animate__fadeOutUp'
-                    }
-                });
-                navigate(from, { replace: true });
-            })
+    try {
+      setLoading(true)
+      // 1. sign in user
+      await logInUser(email, password)
+      toast.success('Login Successful');
+      navigate(from)
+    } catch (err) {
+      console.log(err)
+      toast.error(err.message)
+      setLoading(false)
     }
+  }
 
-
-    const handleValidateCaptcha = (e) => {
-        const user_captcha_value = e.target.value;
-        if (validateCaptcha(user_captcha_value)) {
-            setDisabled(false);
-        }
-        else {
-            setDisabled(true)
-        }
+  // handle google signin
+  const handleGoogleSignIn = async () => {
+    try {
+      await googleLogin()
+      toast.success('Signin Successful');
+      navigate(from)
+    } catch (err) {
+      console.log(err)
+      toast.error(err.message)
     }
+  }
 
-    return (
-        <>
-            <Helmet>
-                <title>BrillianceBay|Login</title>
-            </Helmet>
-
-            <div className="hero min-h-screen lg:mb-10">
-                <div className="hero-content flex-col lg:flex-row">
-                    {/* <div className="h-[600px] lg:w-[700px] lg:text-left rounded-xl p-6">
-                        <img className='w-full h-full object-cover rounded-xl' src="" alt="" />
-                    </div> */}
-
-                    <div className="card border-2 border-primary flex-shrink-0 w-full shadow-2xl bg-base-100">
-                        <div className='flex justify-center mt-4'>
-                            <NavLink to="/">
-                                <div className="flex items-center gap-1 w-24 h-24">
-                                    <img className="w-full" src="https://i.ibb.co/yBqJCHT/logo.png" alt="" />
-                                    
-                                </div> 
-                            </NavLink>
-                        </div>
-                        <form onSubmit={handleSubmit(onSubmit)} className="card-body">
-
-                            <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Email</span>
-                                </label>
-                                <input type="text" placeholder="email" className="input input-bordered"
-                                    {...register("email", { required: true })}
-                                />
-                                {errors.email && <span className='text-red-500'>This field is required</span>}
-                            </div>
-                            <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Password</span>
-                                </label>
-                                <input type="text" placeholder="password" className="input input-bordered"
-                                    {...register("password", { required: true })}
-                                />
-                                {errors.password && <span className='text-red-500'>This field is required</span>}
-
-                            </div>
-                            <div className="form-control">
-                                <label className="label">
-                                    <LoadCanvasTemplate />
-                                </label>
-                                <input onBlur={handleValidateCaptcha} type="text" name="captcha" placeholder="type the captcha above" className="input input-bordered" />
-
-                            </div>
-                            <div className="form-control mt-6">
-                                <input disabled={disabled} className="btn btn-primary" type="submit" value="Login" />
-                            </div>
-
-                        </form>
-                       <div className='text-center'>
-                       <p>
-
-Need to sign up? <Link to="/register" className="label-text-alt link link-hover">Create an account</Link>
-
-</p>
-                       </div>
-                        <SocialLogin></SocialLogin>
-                    </div>
-                </div>
+  return (
+    <div className='flex justify-center items-center min-h-screen'>
+      <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
+        <div className='mb-8 text-center'>
+          <h1 className='my-3 text-4xl font-bold'>Log In</h1>
+          <p className='text-sm text-gray-400'>
+            Sign in to access your account
+          </p>
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          className='space-y-6 ng-untouched ng-pristine ng-valid'
+        >
+          <div className='space-y-4'>
+            <div>
+              <label htmlFor='email' className='block mb-2 text-sm'>
+                Email address
+              </label>
+              <input
+                type='email'
+                name='email'
+                onBlur={e => (e.target.value)}
+                id='email'
+                required
+                placeholder='Enter Your Email Here'
+                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900'
+                data-temp-mail-org='0'
+              />
             </div>
-        </>
-    );
-};
+            <div>
+              <div className='flex justify-between'>
+                <label htmlFor='password' className='text-sm mb-2'>
+                  Password
+                </label>
+              </div>
+              <input
+                type='password'
+                name='password'
+                autoComplete='current-password'
+                id='password'
+                required
+                placeholder='*******'
+                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900'
+              />
+            </div>
+          </div>
 
-export default Login;
+          <div>
+            <button
+              disabled={loading}
+              type='submit'
+              className='bg-purple-500 w-full rounded-md py-3 text-white'
+            >
+              {loading ? (
+                <TbFidgetSpinner disabled className='animate-spin m-auto' />
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </div>
+        </form>
+        
+        <div className='flex items-center pt-4 space-x-1'>
+          <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
+          <p className='px-3 text-sm dark:text-gray-400'>
+            Login with social accounts
+          </p>
+          <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
+        </div>
+
+        <button
+          disabled={loading}
+          onClick={handleGoogleSignIn}
+          className='disabled:cursor-not-allowed flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'
+        >
+          <FcGoogle size={32} />
+
+          <p>Continue with Google</p>
+        </button>
+
+        <p className='px-6 text-sm text-center text-gray-400'>
+          Don&apos;t have an account yet?{' '}
+          <Link
+            to='/register'
+            className='hover:underline hover:text-purple-500 text-gray-600'
+          >
+            Sign up
+          </Link>
+          .
+        </p>
+      </div>
+    </div>
+  )
+}
+
+export default Login

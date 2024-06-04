@@ -6,9 +6,9 @@ const useContest = (searchTag = "") => {
     const { data: contests = [], isLoading: loading, refetch } = useQuery({
         queryKey: ['contests', searchTag], 
         queryFn: async () => {
-           console.log(`Fetching contests with tag: ${searchTag}`);
+           
             const res = await axiosPublic.get(`/contests?tag=${searchTag}`);
-            // const res = await axiosPublic.get(`/contests`, { params: { tag: searchTag } });
+            
             return res.data;
         }
         

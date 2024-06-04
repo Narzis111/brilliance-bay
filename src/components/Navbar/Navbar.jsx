@@ -1,21 +1,54 @@
 import { Link, NavLink } from "react-router-dom";
-import { GiShoppingCart } from "react-icons/gi";
+// import { GiShoppingCart } from "react-icons/gi";
 import useAuth from "../../hooks/useAuth/useAuth";
-import useCart from "../../hooks/useCart";
-import useAdmin from "../../hooks/useAdmin";
+// import useCart from "../../hooks/useCart";
+// import useAdmin from "../../hooks/useAdmin";
 import { useEffect, useState } from "react";
+import HostModal from "../HostModal/HostModal";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
-  const { isAdmin } = useAdmin();
-  const [cart] = useCart();
+  // const { isAdmin } = useAdmin();
+  const axiosSecure = useAxiosSecure();
+  // const [cart] = useCart();
   const handleLogOut = () => {
     logOut()
       .then(() => { })
       .catch(error => console.log(error));
+      toast.success('Successfully logged out')
   }
 
   const [theme, setTheme] = useState('light')
+   // for modal
+   const [isModalOpen, setIsModalOpen] = useState(false)
+   const closeModal = () => {
+     setIsModalOpen(false)
+   }
+   const modalHandler = async () => {
+     console.log('I want to be a Creator')
+     try {
+
+      const currentUser = {
+        email: user?.email,
+        role: 'user',
+        status: 'Requested',
+      }
+      const { data } = await axiosSecure.put(`/user`, currentUser)
+       console.log(data)
+       if (data.modifiedCount > 0) {
+         toast.success('Success! Please wait for admin confirmation')
+       } else {
+         toast.success('Please!, Have to wait till admin approved👊')
+       }
+     } catch (err) {
+       console.log(err)
+       toast.error(err.message)
+     } finally {
+       closeModal()
+     }
+   }
 
   // update state on toggle
   const handleToggle = e => {
@@ -85,6 +118,23 @@ const Navbar = () => {
             <svg className="swap-on fill-current w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" /></svg>
 
           </label>
+          <div className='hidden md:block'>
+                  {/* {!user && ( */}
+                  <button
+                    // disabled={!user}
+                    onClick={() => setIsModalOpen(true)}
+                    className='disabled:cursor-not-allowed cursor-pointer hover:bg-neutral-100 py-3 px-4 text-sm font-semibold rounded-full  transition'
+                  >
+                    Post your Contest
+                  </button>
+                  {/* )} */}
+                </div>
+                {/* Modal */}
+                <HostModal
+                  isOpen={isModalOpen}
+                  closeModal={closeModal}
+                  modalHandler={modalHandler}
+                />
           {user?.email ? (
             <div className='dropdown dropdown-end z-50'>
               <div
@@ -108,19 +158,21 @@ const Navbar = () => {
                   <span>{user?.email}</span>
                   {
 
-                    user && isAdmin && <li><Link to="/dashboard/adminHome">Dashboard</Link></li>
+                    user && <li><Link to="/dashboard">Dashboard</Link></li>
 
                   }
-                  {
+                 
 
-                    user && !isAdmin && <li><Link to="/dashboard/userHome">Dashboard</Link></li>
+                    {/* user && !isAdmin && <li><Link to="/dashboard/userHome">Dashboard</Link></li> */}
 
-                  }
-                  <Link to="/dashboard/cart">
+                  
+                  {/* <Link to="/dashboard/cart">
                     <GiShoppingCart className="text-2xl"></GiShoppingCart>
                     <div className="badge badge-secondary">{cart.length}</div>
 
-                  </Link></ul>
+                  </Link> */}
+                  
+                  </ul>
 
 
                 <button

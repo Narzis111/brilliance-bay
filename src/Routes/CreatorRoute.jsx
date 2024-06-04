@@ -1,22 +1,20 @@
-import { Navigate, useLocation } from "react-router-dom";
-import useAdmin from "../hooks/useAdmin";
-import useAuth from "../hooks/useAuth/useAuth";
+import { Navigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import useRole from '../hooks/useRole'
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
 
 const CreatorRoute = ({ children }) => {
-    const { user, loading } = useAuth();
-    const [isCreator, isCreatorLoading] = useAdmin();
-    const location = useLocation();
+  const [role, isLoading] = useRole()
 
-    if (loading || isCreatorLoading) {
-        return <progress className="progress w-56"></progress>
-    }
-
-    if (user && isCreator) {
-        return children;
-    }
-
-    return <Navigate to="/" state={{ from: location }} replace></Navigate>
-
-};
+  if (isLoading) return <LoadingSpinner />
+  if (role === 'creator') return children
+  return <Navigate to='/dashboard' />
+}
 
 export default CreatorRoute;
+
+
+CreatorRoute.propTypes = {
+  children: PropTypes.element,
+}
+

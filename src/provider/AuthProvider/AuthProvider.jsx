@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import auth from "../../firebase/firebase.config";
 import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
+import axios from "axios";
 export const AuthContext = createContext(null);
 
 // social auth provider
@@ -49,6 +50,18 @@ const AuthProvider = ({ children }) => {
         return signOut(auth);
     }
 
+      // save user
+  const saveUser = async user => {
+    const currentUser = {
+      email: user?.email,
+      role: 'user',
+      status: 'Verified',
+    }
+    const { data } = await axios.put(`http://localhost:5000/user`,
+    currentUser)
+    return data
+  }
+
 
     useEffect(() => {
         const unSubscribe =
@@ -57,6 +70,10 @@ const AuthProvider = ({ children }) => {
                 // const userEmail = currentUser?.email || user?.email;
                 const loggedUser = { email: currentUser?.email };
                 setUser(currentUser);
+                if (currentUser) {
+                   saveUser(currentUser)
+                  }
+                
                 setLoading(false);
 
 
