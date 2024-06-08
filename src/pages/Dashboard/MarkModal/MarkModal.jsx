@@ -9,14 +9,14 @@ import {
   DialogPanel,
   ListboxButton,
   ListboxOption,
-  ListboxOptions, 
+  ListboxOptions,
 } from '@headlessui/react'
 import { BsCheckLg } from 'react-icons/bs'
 import { AiOutlineDown } from 'react-icons/ai'
-const roles = ['user', 'creator', 'admin']
+const roles = ['Pending', 'Success', 'Participant']
 
-const UpdateUserModal = ({ setIsOpen, isOpen, modalHandler, user }) => {
-  const [selected, setSelected] = useState(user?.role)
+const MarkModal = ({ setIsOpen, isOpen, modalHandler, booking }) => {
+  const [selected, setSelected] = useState(booking.review_status)
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
@@ -73,11 +73,11 @@ const UpdateUserModal = ({ setIsOpen, isOpen, modalHandler, user }) => {
                         leaveTo='opacity-0'
                       >
                         <ListboxOptions className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm'>
-                          {roles.map((role, roleIdx) => (
+                          {roles.map((review_status, roleIdx) => (
                             <ListboxOption
                               key={roleIdx}
                               className='relative cursor-default select-none py-2 pl-10 pr-4 text-gray-900 data-[focus]:bg-amber-100  data-[focus]:text-amber-900'
-                              value={role}
+                              value={review_status}
                             >
                               {({ selected }) => (
                                 <>
@@ -86,7 +86,7 @@ const UpdateUserModal = ({ setIsOpen, isOpen, modalHandler, user }) => {
                                       selected ? 'font-medium' : 'font-normal'
                                     }`}
                                   >
-                                    {role}
+                                    {review_status}
                                   </span>
                                   {selected ? (
                                     <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600'>
@@ -132,11 +132,11 @@ const UpdateUserModal = ({ setIsOpen, isOpen, modalHandler, user }) => {
   )
 }
 
-UpdateUserModal.propTypes = {
-  user: PropTypes.object,
+MarkModal.propTypes = {
+  booking: PropTypes.object,
   modalHandler: PropTypes.func,
   setIsOpen: PropTypes.func,
   isOpen: PropTypes.bool,
 }
 
-export default UpdateUserModal
+export default MarkModal

@@ -9,40 +9,40 @@ import useContest from "../../../hooks/useContest";
 
 const ManageItems = () => {
     // const [menu, , refetch] = useContest();
-    const [menu, loading, refetch] = useContest();
-    const axiosSecure = useAxiosSecure();
+    //  const [menu, loading, refetch] = useContest();
+     const axiosSecure = useAxiosSecure();
 
-    const handleDeleteItem = (item) => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const res = await axiosSecure.delete(`/menu/${item._id}`);
-                // console.log(res.data);
-                if (res.data.deletedCount > 0) {
-                    // refetch to update the ui
-                    refetch();
-                    loading();
-
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: `${item.name} has been deleted`,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-
-
-            }
-        });
-    }
+     const handleDeleteItem = (item) => {
+         Swal.fire({
+             title: "Are you sure?",
+             text: "You won't be able to revert this!",
+             icon: "warning",
+             showCancelButton: true,
+             confirmButtonColor: "#3085d6",
+             cancelButtonColor: "#d33",
+             confirmButtonText: "Yes, delete it!"
+         }).then(async (result) => {
+             if (result.isConfirmed) {
+                 const res = await axiosSecure.delete(`/menu/${item._id}`);
+                 // console.log(res.data);
+                 if (res.data.deletedCount > 0) {
+                     // refetch to update the ui
+                     refetch();
+                     loading();
+ 
+                     Swal.fire({
+                         position: "top-end",
+                         icon: "success",
+                         title: `${item.name} has been deleted`,
+                         showConfirmButton: false,
+                         timer: 1500
+                     });
+                 }
+ 
+ 
+             }
+         });
+     }
 
     return (
         <div>

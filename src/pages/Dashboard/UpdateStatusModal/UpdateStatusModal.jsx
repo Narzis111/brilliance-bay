@@ -13,11 +13,12 @@ import {
 } from '@headlessui/react'
 import { BsCheckLg } from 'react-icons/bs'
 import { AiOutlineDown } from 'react-icons/ai'
-const roles = ['user', 'creator', 'admin']
+const statuss = [ 'accepted']
 
-const UpdateUserModal = ({ setIsOpen, isOpen, modalHandler, user }) => {
-  const [selected, setSelected] = useState(user?.role)
+const UpdateStatusModal = ({ setIsOpen, isOpen, modalHandler, contest }) => {
+  const [selected, setSelected] = useState(contest?.status)
   return (
+  
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as='div'
@@ -52,7 +53,7 @@ const UpdateUserModal = ({ setIsOpen, isOpen, modalHandler, user }) => {
                   as='h3'
                   className='text-lg font-medium text-center leading-6 text-gray-900'
                 >
-                  Update User Role
+                  Update Status
                 </DialogTitle>
                 <div className='mt-4 w-full'>
                   <Listbox value={selected} onChange={setSelected}>
@@ -72,7 +73,7 @@ const UpdateUserModal = ({ setIsOpen, isOpen, modalHandler, user }) => {
                         leaveFrom='opacity-100'
                         leaveTo='opacity-0'
                       >
-                        <ListboxOptions className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm'>
+                        {/* <ListboxOptions className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm'>
                           {roles.map((role, roleIdx) => (
                             <ListboxOption
                               key={roleIdx}
@@ -87,6 +88,35 @@ const UpdateUserModal = ({ setIsOpen, isOpen, modalHandler, user }) => {
                                     }`}
                                   >
                                     {role}
+                                  </span>
+                                  {selected ? (
+                                    <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600'>
+                                      <BsCheckLg
+                                        className='h-5 w-5'
+                                        aria-hidden='true'
+                                      />
+                                    </span>
+                                  ) : null}
+                                </>
+                              )}
+                            </ListboxOption>
+                          ))}
+                        </ListboxOptions> */}
+                        <ListboxOptions className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm'>
+                          {statuss.map((status, statIdx) => (
+                            <ListboxOption
+                              key={statIdx}
+                              className='relative cursor-default select-none py-2 pl-10 pr-4 text-gray-900 data-[focus]:bg-amber-100  data-[focus]:text-amber-900'
+                              status={status}
+                            >
+                              {({ selected }) => (
+                                <>
+                                  <span
+                                    className={`block truncate ${
+                                      selected ? 'font-medium' : 'font-normal'
+                                    }`}
+                                  >
+                                    {status}
                                   </span>
                                   {selected ? (
                                     <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600'>
@@ -132,11 +162,18 @@ const UpdateUserModal = ({ setIsOpen, isOpen, modalHandler, user }) => {
   )
 }
 
-UpdateUserModal.propTypes = {
+UpdateStatusModal.propTypes = {
   user: PropTypes.object,
   modalHandler: PropTypes.func,
   setIsOpen: PropTypes.func,
   isOpen: PropTypes.bool,
 }
 
-export default UpdateUserModal
+export default UpdateStatusModal
+
+
+
+
+
+
+ 

@@ -1,8 +1,9 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
-import { TbFidgetSpinner } from 'react-icons/tb'
+import { PiSpinner } from "react-icons/pi"
 import useAuth from '../../hooks/useAuth/useAuth'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
+// import { toast } from 'react-toastify'
 
 const Login = () => {
   const location = useLocation()
@@ -23,7 +24,9 @@ const Login = () => {
       setLoading(true)
       // 1. sign in user
       await logInUser(email, password)
+      // toast.success('Login Successful');
       toast.success('Login Successful');
+
       navigate(from)
     } catch (err) {
       console.log(err)
@@ -98,7 +101,7 @@ const Login = () => {
               className='bg-purple-500 w-full rounded-md py-3 text-white'
             >
               {loading ? (
-                <TbFidgetSpinner disabled className='animate-spin m-auto' />
+                <PiSpinner disabled className='animate-spin m-auto' />
               ) : (
                 'Sign In'
               )}

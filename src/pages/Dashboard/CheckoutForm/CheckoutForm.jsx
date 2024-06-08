@@ -1,13 +1,16 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
-// import './CheckoutForm.css'
-import { ImSpinner9 } from 'react-icons/im'
+import { ImSpinner3 } from 'react-icons/im'
 import { useEffect, useState } from 'react'
+
 import PropTypes from 'prop-types'
+
 import { useNavigate } from 'react-router-dom'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
 import useAuth from '../../../hooks/useAuth/useAuth'
 import { toast } from 'react-toastify'
-const CheckoutForm = ({ closeModal, bookingInfo, refetch }) => {
+
+const CheckoutForm = ({ closeModal, bookingInfo }) => {
+
   const stripe = useStripe()
   const elements = useElements()
   const axiosSecure = useAxiosSecure()
@@ -20,11 +23,11 @@ const CheckoutForm = ({ closeModal, bookingInfo, refetch }) => {
   useEffect(() => {
     // fetch client secret
     if (bookingInfo?.price && bookingInfo?.price > 1) {
-      getClientSecret({ price : bookingInfo?.price })
+      getClientSecret({ price: bookingInfo?.price })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingInfo?.price])
-console.log( bookingInfo?.price );
+
   //   get clientSecret
   const getClientSecret = async price => {
     const { data } = await axiosSecure.post(`/create-payment-intent`, price)
@@ -32,14 +35,12 @@ console.log( bookingInfo?.price );
     setClientSecret(data.clientSecret)
   }
 
-
   const handleSubmit = async event => {
     // Block native form submission.
     event.preventDefault()
     setProcessing(true)
     if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      // form submission until Stripe.js has loaded.
+   
       return
     }
 
@@ -95,6 +96,7 @@ console.log( bookingInfo?.price );
         contentId: bookingInfo._id,
         transactionId: paymentIntent.id,
         date: new Date(),
+        
       }
       delete paymentInfo._id
       console.log(paymentInfo)
@@ -103,16 +105,19 @@ console.log( bookingInfo?.price );
         const { data } = await axiosSecure.post('/booking', paymentInfo)
         console.log(data)
 
-        // 3. change room status to booked in db
-        await axiosSecure.patch(`/contests/status/${bookingInfo?._id}`, {
-          status: true,
+        // 3. increase the no of participant in db
+        const { data1 } = await axiosSecure.patch(`/contests/participantIncrease/${bookingInfo._id}`, {
+          
         })
+        console.log(data1)
+
 
         // update ui
-        refetch()
+        // refetch()
         closeModal()
-        toast.success('Room Booked Successfully')
-        navigate('/dashboard/my-bookings')
+        toast.success('Registered Successfully')
+        // navigate('/dashboard/my-bookings')
+        navigate('/')
       } catch (err) {
         console.log(err)
       }
@@ -149,9 +154,9 @@ console.log( bookingInfo?.price );
             className='inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2'
           >
             {processing ? (
-              <ImSpinner9 className='animate-spin m-auto' size={24} />
+              <ImSpinner3 className='animate-spin m-auto' size={24} />
             ) : (
-              `Pay ${bookingInfo?.price}`
+              `Pay $ ${bookingInfo?.price}`
             )}
           </button>
           <button

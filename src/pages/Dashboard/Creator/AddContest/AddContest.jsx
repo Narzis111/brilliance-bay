@@ -2,26 +2,30 @@ import Swal from "sweetalert2";
 import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import ReactDatePicker from "react-datepicker";
-
 import { Helmet } from "react-helmet-async";
-import useAuth from "../../../../hooks/useAuth/useAuth";
 import { useForm } from "react-hook-form";
 import useAxiosPublic from "../../../../hooks/useAxiosPublic";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import SectionTitle from "../../../../components/SectionTitle/SectionTitle";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../../../hooks/useAuth/useAuth";
+import { format } from 'date-fns';
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 const AddContest = () => {
 
-    const { register, handleSubmit, disabled, reset } = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const axiosPublic = useAxiosPublic();
     const axiosSecure = useAxiosSecure();
 
     const { user } = useAuth();
     const [dueDate, setDueDate] = useState(new Date());
+    
+
+const dateString = dueDate
+const formattedDate = format(new Date(dateString), 'dd/MM/yyyy');
     const navigate = useNavigate()
 
     const onSubmit = async (data) => {
@@ -42,11 +46,14 @@ const AddContest = () => {
                 contestPrice: parseFloat(data.contestPrice),
                 taskSubmissionInstructions: data.taskSubmissionInstructions,
                 image: res.data.data.display_url,
-                
+                status: 'pending',
                 tags: data.tags,
                 contestDescription: data.contestDescription,
-                contestDeadline: data.dueDate,
+                contestDeadline: formattedDate,
+                creator_email: user.email,
+                creator_image: user.photoURL
             }
+            console.log(info);
             // only creator can add  & server a api lagbe
             const contestsRes = await axiosSecure.post('/contests', info);
             console.log(contestsRes.data)
@@ -127,6 +134,17 @@ const AddContest = () => {
                         </div>
                         <div className="form-control w-full my-6">
                             <label className="label">
+                                <span className="label-text">contestDescription*</span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="contestDescription"
+                                {...register('contestDescription', { required: true })}
+                                required
+                                className="input input-bordered w-full" />
+                        </div>
+                        <div className="form-control w-full my-6">
+                            <label className="label">
                                 <span className="label-text">Tags*</span>
                             </label>
                             <select defaultValue="default" {...register('tags', { required: true })}
@@ -145,22 +163,10 @@ const AddContest = () => {
                             </select>
 
                         </div>
-
-                        {/* <div className="form-control w-full my-6">
-                            <label className="label">
-                                <span className="label-text">Creator email*</span>
-                            </label>
-                            <input
-                                type="text"
-                                placeholder=""
-                                {...register(user?.email, { disabled }, { required: true })}
-                                className="input input-bordered w-full" />
-                        </div> */}
-
-
+                      
                     </div>
 
-                    <div className="flex gap-4">
+                    <div className="">
 
 
                         <div className="form-control w-full">
@@ -177,18 +183,15 @@ const AddContest = () => {
                                 required
 
                             />
+                           
                         </div>
-                        <div className="form-control w-full">
-                            <label className="label">
-                                <span className="label-text">contestDescription</span>
-                            </label>
-                            <textarea {...register('contestDescription')} className="textarea textarea-bordered h-24" placeholder="contestDescription"></textarea>
-                        </div>
-                        <div className="form-control w-full my-6">
+                        
+                    </div>
+                    <div className="form-control w-full my-3">
                             <input {...register('image', { required: true })} type="file" className="file-input w-full max-w-xs" />
                         </div>
-                    </div>
-                    <button className="btn border-2 border-purple-600">
+                
+                      <button className="btn border-2 border-purple-600">
                         Add Content
                     </button>
                 </form>

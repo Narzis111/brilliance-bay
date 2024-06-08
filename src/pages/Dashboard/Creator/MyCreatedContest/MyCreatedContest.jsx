@@ -25,7 +25,6 @@ const MyCreatedContest = () => {
   
     const handleDelete = id => {
         Swal.fire({
-            title: "Are you sure?",
             text: "You won't be able to revert this!",
             icon: "warning",
             showCancelButton: true,
@@ -80,7 +79,7 @@ const MyCreatedContest = () => {
                         scope='col'
                         className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-bold'
                       >
-                        Price
+                        Status
                       </th>
                      
                       <th
@@ -98,7 +97,7 @@ const MyCreatedContest = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {/* Room row data */}
+                    {/* my created row data */}
   
                     {contests.map(contest=> (
                       <ContentDataRow

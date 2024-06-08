@@ -1,4 +1,4 @@
-import { BsFingerprint } from 'react-icons/bs'
+import { BsAward, BsFingerprint } from 'react-icons/bs'
 import { GrUserAdmin } from 'react-icons/gr'
 import { useState } from 'react'
 import MenuItem from './MenuItem'
@@ -18,7 +18,7 @@ const UserMenu = () => {
     setIsModalOpen(false)
   }
   const modalHandler = async () => {
-    console.log('I want to be a host')
+    console.log('I want to be a creator')
     try {
       const currentUser = {
         email: user?.email,
@@ -44,7 +44,12 @@ const UserMenu = () => {
       <MenuItem
         icon={BsFingerprint}
         label='My Bookings'
-        address='my-bookings'
+        address='my-booking'
+      />
+      <MenuItem
+        icon={BsAward}
+        label='Winning List'
+        address='my-winning'
       />
 
       {role === 'user' && (

@@ -1,19 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import Main from "../layout/Main";
 import Home from "../pages/Home/Home";
-import Order from "../pages/Order/Order/Order";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../layout/Dashboard";
-// import Cart from "../pages/Dashboard/Cart/Cart";
 import AllUsers from "../pages/Dashboard/AllUsers/AllUsers";
 import AdminRoute from "./AdminRoute";
-import ManageItems from "../pages/Dashboard/ManageItems/ManageItems";
 import UpdateItem from "../pages/Dashboard/UpdateItem/UpdateItem";
-import Payment from "../pages/Dashboard/Payment/Payment";
-// import PaymentHistory from "../pages/Dashboard/PaymentHistory/PaymentHistory";
-
 import ErrorPage from "../components/ErrorPage/ErrorPage";
 import Detail from "../components/Detail/Detail";
 import AllContests from "../pages/AllContents/AllContests";
@@ -22,6 +16,11 @@ import ContestSubmitted from "../pages/Dashboard/Creator/ContestSubmitted/Contes
 import AddContest from "../pages/Dashboard/Creator/AddContest/AddContest";
 import Profile from "../pages/Dashboard/Profile";
 import CreatorRoute from "./CreatorRoute";
+import ManageContest from "../pages/Dashboard/ManageContest/ManageContest";
+import MyParticipated from "../pages/Dashboard/User/MyParticipated/MyParticipated";
+import SubmitTask from "../pages/Dashboard/User/SubmitTask/SubmitTask";
+import MyWinning from "../pages/Dashboard/MyWinning/MyWinning";
+import UserHome from "../pages/Dashboard/UserHome/UserHome";
 
 
 const router = createBrowserRouter([
@@ -44,10 +43,6 @@ const router = createBrowserRouter([
         element: <AllContests></AllContests>
       },
       {
-        path: "/order/:category",
-        element: <Order></Order>
-      },
-      {
         path: "/login",
         element: <Login></Login>
       },
@@ -62,52 +57,27 @@ const router = createBrowserRouter([
   {
     path: 'dashboard',
     element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
-    //       children: [
-    //         // all users common routes
-    //         {
-    //           path: 'userHome',
-    //           
-    //         },
-    //         {
-    //           path: 'cart',
-    //           element: <Cart></Cart>
-    //         },
-           
-    //         {
-    //           path: 'paymentHistory',
-    //           element: <PaymentHistory></PaymentHistory>
-    //         }, 
-    //         // only creator routes =======================
-
-    //         {
-    //           path: 'addContest',
-    //           element:<AddContest></AddContest>
-    //         },
-    //         {
-    //           path: 'myCreated',
-    //           element:<MyCreatedContest></MyCreatedContest> 
-    //         },
-    //         {
-    //           path: 'submitted',
-    //           element:<ContestSubmitted></ContestSubmitted> 
-    //         },
-    // // =============================
-    //         // only admin routes
-    //         {
-    //           path: 'adminHome',
-    //           element: <AdminRoute><AdminHome></AdminHome></AdminRoute>
-    //         },
-
-
-    //       ]
-    children: [
+       children: [
+        {
+          path: 'userHome',
+          element: <UserHome></UserHome>
+        },
       {
         path: 'profile',
         element: <PrivateRoute><Profile></Profile></PrivateRoute> 
       },
+      
       {
-        path: 'payment',
-        element: <PrivateRoute><Payment></Payment></PrivateRoute>
+        path: 'my-booking',
+        element: <PrivateRoute><MyParticipated></MyParticipated></PrivateRoute>
+      },
+      {
+        path: 'my-winning',
+        element: <PrivateRoute><MyWinning></MyWinning></PrivateRoute>
+      },
+      {
+        path: 'my-submit/:id',
+        element: <PrivateRoute><SubmitTask></SubmitTask></PrivateRoute>,
       },
 
       // creator
@@ -115,13 +85,19 @@ const router = createBrowserRouter([
         path: 'addContest',
         element: <PrivateRoute><CreatorRoute><AddContest></AddContest></CreatorRoute></PrivateRoute>
       },
+  
+      {
+        path: 'updateContest/:id',
+        element:<CreatorRoute><UpdateItem></UpdateItem></CreatorRoute>,
+        loader: ({params}) => fetch(`https://final-project-server-snowy.vercel.app/contests/${params.id}`)
+      },
       {
         path: 'myCreated',
         element: <PrivateRoute><CreatorRoute><MyCreatedContest></MyCreatedContest></CreatorRoute></PrivateRoute>  
       },
       {
         path: 'submitted',
-        element: <PrivateRoute><CreatorRoute><ContestSubmitted></ContestSubmitted></CreatorRoute></PrivateRoute>
+        element: <PrivateRoute><CreatorRoute><ContestSubmitted></ContestSubmitted></CreatorRoute></PrivateRoute>,
       },
      
       // Admin
@@ -131,17 +107,16 @@ const router = createBrowserRouter([
       },
       
       {
-        path: 'manageItems',
-        element:<AdminRoute><ManageItems></ManageItems></AdminRoute>
+        path: 'manageContests',
+        element:<AdminRoute><ManageContest></ManageContest></AdminRoute>
       },
-      {
-        path: 'updateItem/:id',
-        element:<AdminRoute><UpdateItem></UpdateItem></AdminRoute>,
-        loader: ({params}) => fetch(`http://localhost:5000/menu/${params.id}`)
-      },
+   
 
     ],
   }
 ]);
 
 export default router;
+
+// https://final-project-server-snowy.vercel.app
+// http://localhost:5000

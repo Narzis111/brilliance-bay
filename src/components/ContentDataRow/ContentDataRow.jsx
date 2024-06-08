@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
-import DeleteModal from '../Modal/DeleteModal/DeleteModal'
+import DeleteModal from '../Modal/DeleteModal'
+import { Link } from 'react-router-dom'
 
 const ContentDataRow = ({ contest, handleDelete }) => {
   // for delete modal
@@ -9,7 +10,6 @@ const ContentDataRow = ({ contest, handleDelete }) => {
     setIsOpen(false)
   }
 
-  // for update modal
   return (
     <tr>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
@@ -17,7 +17,7 @@ const ContentDataRow = ({ contest, handleDelete }) => {
           <div className='flex-shrink-0'>
             <div className='block relative'>
               <img
-                alt='profile'
+                alt='image'
                 src={contest?.image}
                 className='mx-auto object-cover rounded h-10 w-15 '
               />
@@ -31,7 +31,7 @@ const ContentDataRow = ({ contest, handleDelete }) => {
         <p className='text-gray-900 whitespace-no-wrap'>{contest?.contestName}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 whitespace-no-wrap'>${contest?.contestPrice}</p>
+        <p className='text-gray-900 whitespace-no-wrap'>{contest?.status}</p>
       </td>
      
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
@@ -46,23 +46,24 @@ const ContentDataRow = ({ contest, handleDelete }) => {
           <span className='relative'>Delete</span>
         </button>
         {/* Delete modal */}
-        <DeleteModal
+       
+        {contest?.status === 'pending' && <DeleteModal
           isOpen={isOpen}
           closeModal={closeModal}
           handleDelete={handleDelete}
           id={contest?._id}
-        />
+        />}
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <span className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'>
-          <span
-            aria-hidden='true'
-            className='absolute inset-0 bg-green-200 opacity-50 rounded-full'
-          ></span>
-          <span className='relative'>Update</span>
-        </span>
-        {/* Update Modal */}
-      </td>
+      <td>
+      
+          {
+            contest?.status === 'pending' ?
+              <Link to={`/dashboard/updateContest/${contest?._id}`}>
+              <button>Update</button>
+            </Link> :
+            <><button disabled={true}>Update</button></>
+          }
+          </td>
     </tr>
   )
 }

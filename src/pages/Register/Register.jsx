@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
-import { TbFidgetSpinner } from 'react-icons/tb'
+import { PiSpinner } from "react-icons/pi";
 import { imageUpload } from '../../image/utils'
 import useAuth from '../../hooks/useAuth/useAuth'
 import { toast } from 'react-toastify'
@@ -129,7 +129,7 @@ const Register = () => {
               className='bg-purple-500 w-full rounded-md py-3 text-white'
             >
               {loading ? (
-                <TbFidgetSpinner className='animate-spin m-auto' />
+                <PiSpinner className='animate-spin m-auto' />
               ) : (
                 'Continue'
               )}
@@ -156,7 +156,7 @@ const Register = () => {
           Already have an account?{' '}
           <Link
             to='/login'
-            className='hover:underline hover:text-rose-500 text-gray-600'
+            className='hover:underline hover:text-Purple-500 text-gray-600'
           >
             Login
           </Link>

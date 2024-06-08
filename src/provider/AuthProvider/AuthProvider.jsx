@@ -13,7 +13,7 @@ const googleProvider = new GoogleAuthProvider();
 const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
-
+    const [reload, setReload] = useState(false);
     const [loading, setLoading] = useState(true);
 
     const axiosPublic = useAxiosPublic();
@@ -57,7 +57,7 @@ const AuthProvider = ({ children }) => {
       role: 'user',
       status: 'Verified',
     }
-    const { data } = await axios.put(`http://localhost:5000/user`,
+    const { data } = await axios.put(`https://final-project-server-snowy.vercel.app/user`,
     currentUser)
     return data
   }
@@ -101,7 +101,7 @@ const AuthProvider = ({ children }) => {
         return () => {
             unSubscribe();
         }
-    }, [axiosPublic])
+    }, [axiosPublic, reload])
 
 
 
@@ -111,6 +111,7 @@ const AuthProvider = ({ children }) => {
         setUser,
         loading,
         setLoading,
+        setReload,
         createUser,
         logInUser,
         googleLogin,

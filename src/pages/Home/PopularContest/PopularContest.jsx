@@ -1,11 +1,26 @@
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
-import useContest from "../../../hooks/useContest";
 import ContestItem from "../../../components/ContestItem/ContestItem";
 import { Link } from "react-router-dom";
+import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
 
 
 const PopularContest = () => {
-    const [contests] = useContest();
+    const axiosPublic = useAxiosPublic();
+    const { data: contests = [], isLoading } = useQuery({
+        queryKey: ['contests'], 
+        queryFn: async () => {
+           
+            const res = await axiosPublic.get(`/allcontest-popular`);
+            
+            return res.data;
+        }
+        
+        
+    });
+    if (isLoading) return <LoadingSpinner></LoadingSpinner>
+
 
    
     const popular = contests.sort((a, b) => b.numberOfParticipants - a.numberOfParticipants);

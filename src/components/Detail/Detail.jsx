@@ -23,7 +23,7 @@ const Detail = () => {
     useEffect(() => {
         const fetchDetails = async () => {
 
-            const response = await axios.get(`http://localhost:5000/contests/${id}`);
+            const response = await axios.get(`https://final-project-server-snowy.vercel.app/contests/${id}`);
             setViews(response.data);
             console.log(response.data);
 
@@ -33,7 +33,7 @@ const Detail = () => {
     }, [id]);
 
 
-    const { _id, contestName, contestPrice, prizeMoney, taskSubmissionInstructions, contestDeadline, image, numberOfParticipants, tags, contestDescription } = views || {};
+    const { contestName, contestPrice, prizeMoney, taskSubmissionInstructions, contestDeadline, image, numberOfParticipants, tags, contestDescription } = views || {};
 
 
     return (
@@ -63,8 +63,10 @@ const Detail = () => {
                       
                          <hr />
       <div className='p-4'>
-        <Button onClick={() => setIsOpen(true)} label={'Registration'} />
-      </div>
+       
+          <Button onClick={() => setIsOpen(true)} label={'Registration'} />
+      
+        </div>
 
       {/* Modal */}
       <BookingModal
@@ -73,7 +75,10 @@ const Detail = () => {
         bookingInfo={{
           ...views,
           price: contestPrice,
-          user: { name: user?.displayName },
+          user_email: user?.email,
+          user_name: user?.displayName,
+          user_photo: user?.photoURL
+          
         }}
       />
       <hr />
