@@ -100,7 +100,6 @@ const Home = () => {
             <label className="md:hidden absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 input input-bordered flex items-center gap-2">
                 <input
                     type="text"
-
                     className="grow"
                     placeholder="Search with Tags"
                     value={searchInput}
