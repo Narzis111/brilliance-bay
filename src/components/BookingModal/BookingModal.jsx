@@ -49,9 +49,13 @@ const BookingModal = ({ closeModal, isOpen, bookingInfo, refetch }) => {
                   Review Amount Before Registration
                 </DialogTitle>
                 
-               
+                <div className='mt-2 text-center'>
+                  <p className='text-sm text-gray-500'>
+                    Price: $ {bookingInfo.contestName}
+                  </p>
+                </div>
 
-                <div className='mt-2'>
+                <div className='mt-2 text-center'>
                   <p className='text-sm text-gray-500'>
                     Price: $ {bookingInfo.contestPrice}
                   </p>

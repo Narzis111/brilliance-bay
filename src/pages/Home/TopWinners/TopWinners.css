@@ -1,0 +1,43 @@
+/* TopWinners.css */
+.advertising-section img {
+    max-height: 250px;
+}
+
+.advertising-section h2 {
+    color: #6b46c1; /* Purple color */
+}
+
+.advertising-section button {
+    background-color: #6b46c1;
+}
+
+.advertising-section button:hover {
+    background-color: #553c9a;
+}
+
+/* Swiper specific styles */
+.slick-prev:before,
+.slick-next:before {
+    color: black;
+}
+
+.slick-dots li button:before {
+    color: black;
+    font-size: 12px;
+}
+
+.slick-dots li.slick-active button:before {
+    color: black;
+}
+
+.slick-slide {
+    transition: transform 0.5s ease-in-out;
+}
+
+.slick-slide:hover {
+    transform: scale(1.05);
+}
+.featured-item{
+    background-image: url('/Student-Contests-2023.webp');
+}
+

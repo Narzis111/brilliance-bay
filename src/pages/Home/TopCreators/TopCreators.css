@@ -1,0 +1,29 @@
+.top-creators-container {
+    width: 100%;
+    max-width: 600px; /* Adjust as needed */
+    margin: auto;
+  }
+  
+  .swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .swiper-pagination-bullet {
+    background-color: #000; /* Change bullet color */
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #000; /* Change arrow color */
+  }
+  

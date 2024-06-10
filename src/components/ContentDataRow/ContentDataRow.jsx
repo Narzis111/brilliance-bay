@@ -52,16 +52,16 @@ const ContentDataRow = ({ contest, handleDelete }) => {
           closeModal={closeModal}
           handleDelete={handleDelete}
           id={contest?._id}
-        />}
+        /> }
       </td>
       <td>
       
           {
             contest?.status === 'pending' ?
               <Link to={`/dashboard/updateContest/${contest?._id}`}>
-              <button>Update</button>
+              <button className='bg-slate-200'>Update</button>
             </Link> :
-            <><button disabled={true}>Update</button></>
+            <><button className='bg-slate-200 disabled cursor-not-allowed'>Update</button></>
           }
           </td>
     </tr>

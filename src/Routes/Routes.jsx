@@ -20,7 +20,7 @@ import ManageContest from "../pages/Dashboard/ManageContest/ManageContest";
 import MyParticipated from "../pages/Dashboard/User/MyParticipated/MyParticipated";
 import SubmitTask from "../pages/Dashboard/User/SubmitTask/SubmitTask";
 import MyWinning from "../pages/Dashboard/MyWinning/MyWinning";
-import UserHome from "../pages/Dashboard/UserHome/UserHome";
+
 
 
 const router = createBrowserRouter([
@@ -38,6 +38,7 @@ const router = createBrowserRouter([
         path: "/contests/:id",
         element: <PrivateRoute><Detail></Detail></PrivateRoute> 
       },
+          
       {
         path: "/all-contests",
         element: <AllContests></AllContests>
@@ -57,11 +58,9 @@ const router = createBrowserRouter([
   {
     path: 'dashboard',
     element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
+  
        children: [
-        {
-          path: 'userHome',
-          element: <UserHome></UserHome>
-        },
+      
       {
         path: 'profile',
         element: <PrivateRoute><Profile></Profile></PrivateRoute> 
@@ -103,7 +102,7 @@ const router = createBrowserRouter([
       // Admin
       {
         path: 'manage-users',
-        element:<PrivateRoute><AdminRoute><AllUsers></AllUsers></AdminRoute></PrivateRoute>
+        element:<AdminRoute><AllUsers></AllUsers></AdminRoute>
       },
       
       {
@@ -119,4 +118,4 @@ const router = createBrowserRouter([
 export default router;
 
 // https://final-project-server-snowy.vercel.app
-// http://localhost:5000
+// https://final-project-server-snowy.vercel.app

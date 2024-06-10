@@ -1,20 +1,24 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
-import { PiSpinner } from "react-icons/pi";
 import { imageUpload } from '../../image/utils'
 import useAuth from '../../hooks/useAuth/useAuth'
-import { toast } from 'react-toastify'
+import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 const Register = () => {
+  const [disabled, setDisabled] = useState(true);
   const navigate = useNavigate()
-  
+
   const {
-    loading,
     setLoading,
     createUser,
     googleLogin,
     updateUserProfile
   } = useAuth()
+  useEffect(() => {
+    loadCaptchaEnginge(6);
+  }, [])
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -37,7 +41,7 @@ const Register = () => {
       await updateUserProfile(name, image_url);
       navigate('/')
       toast.success('Signup Successful');
-      
+
     } catch (err) {
       console.log(err)
       toast.error(err.message)
@@ -56,12 +60,22 @@ const Register = () => {
     }
   }
 
+  const handleValidateCaptcha = (e) => {
+    const user_captcha_value = e.target.value;
+    if (validateCaptcha(user_captcha_value)) {
+      setDisabled(false);
+    }
+    else {
+      setDisabled(true)
+    }
+  }
+
   return (
     <div className='flex justify-center items-center min-h-screen'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
         <div className='mb-8 text-center'>
           <h1 className='my-3 text-4xl font-bold'>Sign Up</h1>
-          <p className='text-sm text-gray-400'>Welcome to StayVista</p>
+          <p className='text-sm text-gray-400'>Welcome to BrillianceBay</p>
         </div>
         <form onSubmit={handleSubmit} className='space-y-6'>
           <div className='space-y-4'>
@@ -121,19 +135,18 @@ const Register = () => {
               />
             </div>
           </div>
+          <div className="form-control">
+            <label className="label">
+              <LoadCanvasTemplate />
+            </label>
+            <input onBlur={handleValidateCaptcha} type="text" name="captcha" placeholder="type the captcha above" className="input input-bordered" />
+
+          </div>
 
           <div>
-            <button
-              disabled={loading}
-              type='submit'
-              className='bg-purple-500 w-full rounded-md py-3 text-white'
-            >
-              {loading ? (
-                <PiSpinner className='animate-spin m-auto' />
-              ) : (
-                'Continue'
-              )}
-            </button>
+          <div className="mt-6">
+          <input disabled={disabled} className='bg-purple-500 w-full rounded-md py-3 text-white' type="submit" value="Sign Up" />
+        </div>
           </div>
         </form>
         <div className='flex items-center pt-4 space-x-1'>
@@ -143,8 +156,9 @@ const Register = () => {
           </p>
           <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
+     
         <button
-          disabled={loading}
+         
           onClick={handleGoogleSignIn}
           className='disabled:cursor-not-allowed flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'
         >

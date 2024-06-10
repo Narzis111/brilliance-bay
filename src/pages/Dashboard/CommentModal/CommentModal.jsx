@@ -30,7 +30,7 @@ const CommentModal = ({ closeModal, isOpen, contest, refetch }) => {
       Swal.fire({
         position: "top-end",
         icon: "success",
-        title: `added to the menu.`,
+        title: `added to the contest.`,
         showConfirmButton: false,
         timer: 1500
       });

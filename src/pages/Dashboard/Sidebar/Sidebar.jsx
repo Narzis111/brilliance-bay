@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import { GrLogout } from 'react-icons/gr'
 import { FcSettings } from 'react-icons/fc'
-import { BsFillHouseAddFill, BsGraphUp, BsHouse } from 'react-icons/bs'
-import { MdHomeWork } from 'react-icons/md'
-import { AiOutlineBars } from 'react-icons/ai'
-import { NavLink } from 'react-router-dom'
+import { BsFillHouseAddFill, BsHouse } from 'react-icons/bs'
+import { NavLink, useNavigate } from 'react-router-dom'
 import useAuth from '../../../hooks/useAuth/useAuth'
 import { toast } from 'react-toastify'
 import useRole from '../../../hooks/useRole'
@@ -12,10 +10,11 @@ import MenuItem from './Menu/MenuItem'
 import CreatorMenu from './Menu/CreatorMenu'
 import UserMenu from './Menu/UserMenu'
 import AdminMenu from './Menu/AdminMenu'
-import ToggleBtn from '../../../components/ToggleBtn/ToggleBtn'
+import { AiOutlineBars } from "react-icons/ai";
 
 const Sidebar = () => {
     const { logOut } = useAuth()
+    const navigate = useNavigate();
     const [isActive, setActive] = useState(false)
     const [role, isLoading] = useRole();
     console.log(role, isLoading);
@@ -23,21 +22,23 @@ const Sidebar = () => {
         logOut()
             .then((result) => {
                 toast.success("successfully Logout");
+                navigate('/')
                 console.log(result.user);
             })
             .catch((err) => toast.error(err));
+            
     };
     // Sidebar Responsive Handler
     const handleToggle = () => {
         setActive(!isActive)
     }
 
-    const [toggle, setToggle] = useState(true)
+    // const [toggle, setToggle] = useState(true)
 
 
-    const toggleHandler = event => {
-        setToggle(event.target.checked)
-    }
+    // const toggleHandler = event => {
+    //     setToggle(event.target.checked)
+    // }
     return (
         <>
             {/* Small Screen Navbar */}
@@ -68,33 +69,44 @@ const Sidebar = () => {
 
             {/* Sidebar */}
             <div
-                className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${isActive && '-translate-x-full'
+                className={`z-10  bg-rose-100 md:fixed flex flex-col justify-between overflow-x-hidden w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${isActive && '-translate-x-full'
                     }  md:translate-x-0  transition duration-200 ease-in-out`}
             >
                 <div>
-                    <div>
-                        <div className='w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-rose-100 mx-auto'>
-                            <NavLink to="/">
-                                <div className="flex items-center gap-1">
-                                    <img className="w-[50px]" src="https://i.ibb.co/yBqJCHT/logo.png" alt="" />
-                                    <h1 className="lg:text-xl text-xs text-blue-950 font-extrabold">
-                                        <span className="text-2xl">B</span>
-                                        <span>rilliance</span>
-                                        <span className="text-2xl text-pretty text-blue-400">B</span>
-                                        <span className="font-semibold text-pretty text-blue-400">ay</span>
-                                    </h1>
-                                </div>
-                            </NavLink>
-                        </div>
+
+                    <div className='w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-rose-100 mx-auto'>
+                        <NavLink to="/">
+                            <div className="flex items-center gap-1">
+                                <img className="w-[50px]" src="https://i.ibb.co/yBqJCHT/logo.png" alt="" />
+                                <h1 className="lg:text-xl text-xs text-blue-950 font-extrabold">
+                                    <span className="text-2xl">B</span>
+                                    <span>rilliance</span>
+                                    <span className="text-2xl text-pretty text-blue-400">B</span>
+                                    <span className="font-semibold text-pretty text-blue-400">ay</span>
+                                </h1>
+                            </div>
+                        </NavLink>
                     </div>
+
 
                     {/* Nav Items */}
                     <div className='flex flex-col justify-between flex-1 mt-6'>
+
                         {/* Conditional toggle button here.. */}
-                        {role === 'creator' && (
-              <ToggleBtn toggleHandler={toggleHandler} toggle={toggle} />
-            )}
+                        {/* {role === 'creator' && (
+                            <ToggleBtn toggleHandler={toggleHandler} toggle={toggle} />
+                        )} */}
+                        <div>
+                        <MenuItem
+                            label='User Home'
+                            address='/dashboard'
+                            icon={BsFillHouseAddFill}
+                        />
+                        </div>
+                        <div className="divider"></div>
                         <nav>
+
+
                             {/* Menu items */}
                             <MenuItem
                                 label='Home'
@@ -102,14 +114,14 @@ const Sidebar = () => {
                                 icon={BsHouse}
                             />
                             {role === 'user' && <UserMenu />}
-                            {/* {role === 'creator' && <CreatorMenu />} */}
-                            {role === 'creator' ? (
+                            {role === 'creator' && <CreatorMenu />}
+                            {/* {role === 'creator' ? (
                                 toggle ? (
                                     <CreatorMenu />
                                 ) : (
                                     <UserMenu />
                                 )
-                            ) : undefined}
+                            ) : undefined} */}
                             {role === 'admin' && <AdminMenu />}
                         </nav>
 
@@ -118,14 +130,15 @@ const Sidebar = () => {
                 </div>
 
                 <div>
-                    <hr />
+                
+                    <div className="divider"></div>
 
                     {/* Profile Menu */}
                     <MenuItem
-                                label='Profile'
-                                address='/dashboard/profile'
-                                icon={FcSettings}
-                            />
+                        label='Profile'
+                        address='/dashboard/profile'
+                        icon={FcSettings}
+                    />
                     <button
                         onClick={() => handleLogOut()}
 

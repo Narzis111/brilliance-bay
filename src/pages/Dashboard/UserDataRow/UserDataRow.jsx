@@ -1,21 +1,15 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import useAuth from '../../../hooks/useAuth/useAuth'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
-import { toast } from 'react-toastify'
-import UpdateUserModal from '../UpdateUserModal/UpdateUserModal'
+import toast from 'react-hot-toast'
 
 const UserDataRow = ({ user, refetch }) => {
-  const { user: loggedInUser } = useAuth()
-
-  const [isOpen, setIsOpen] = useState(false)
   const axiosSecure = useAxiosSecure()
   const { mutateAsync } = useMutation({
     mutationFn: async role => {
       const { data } = await axiosSecure.patch(
         `/users/update/${user?.email}`,
-        role
+        { role }
       )
       return data
     },
@@ -23,30 +17,30 @@ const UserDataRow = ({ user, refetch }) => {
       refetch()
       console.log(data)
       toast.success('User role updated successfully!')
-      setIsOpen(false)
     },
+    onError: error => {
+      console.error(error)
+      toast.error(error.response?.data?.message || 'Failed to update user role')
+    }
   })
 
-  //   modal handler
-  const modalHandler = async selected => {
-    if (loggedInUser.email === user.email) {
-      toast.error('Action Not Allowed')
-      return setIsOpen(false)
+  const handleDropdownSelect = async selected => {
+    if (user.status !== 'Requested') {
+      toast.error('Role can only be updated if status is "Requested".')
+      return
     }
 
-    const userRole = {
-      role: selected,
-      status: 'Verified',
-      email: user.email
-    }
+    const userRole = { role: selected,
+      status: 'Verifi'
+     }
 
     try {
       await mutateAsync(userRole)
     } catch (err) {
-      console.log(err)
-      toast.error(err.message)
+      console.error(err)
     }
   }
+
   return (
     <tr>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
@@ -70,31 +64,28 @@ const UserDataRow = ({ user, refetch }) => {
       </td>
 
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <button
-          onClick={() => setIsOpen(true)}
-          className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'
-        >
-          <span
-            aria-hidden='true'
-            className='absolute inset-0 bg-green-200 opacity-50 rounded-full'
-          ></span>
-          <span className='relative'>Update Role</span>
-        </button>
-        {/* Update User Modal */}
-        <UpdateUserModal
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          modalHandler={modalHandler}
-          user={user}
-        />
+        <details className="dropdown">
+          <summary className="m-1 btn">Update Role</summary>
+          <ul className="p-2 shadow menu dropdown-content z-[10] bg-base-100 rounded-box w-52">
+            <li>
+              <a onClick={() => handleDropdownSelect('user')}>user</a>
+            </li>
+            <li>
+              <a onClick={() => handleDropdownSelect('creator')}>creator</a>
+            </li>
+            <li>
+              <a onClick={() => handleDropdownSelect('admin')}>admin</a>
+            </li>
+          </ul>
+        </details>
       </td>
     </tr>
   )
 }
 
 UserDataRow.propTypes = {
-  user: PropTypes.object,
-  refetch: PropTypes.func,
+  user: PropTypes.object.isRequired,
+  refetch: PropTypes.func.isRequired,
 }
 
 export default UserDataRow

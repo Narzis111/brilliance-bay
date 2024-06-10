@@ -1,9 +1,7 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { ImSpinner3 } from 'react-icons/im'
 import { useEffect, useState } from 'react'
-
 import PropTypes from 'prop-types'
-
 import { useNavigate } from 'react-router-dom'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
 import useAuth from '../../../hooks/useAuth/useAuth'
@@ -44,9 +42,6 @@ const CheckoutForm = ({ closeModal, bookingInfo }) => {
       return
     }
 
-    // Get a reference to a mounted CardElement. Elements knows how
-    // to find your CardElement because there can only ever be one of
-    // each type of element.
     const card = elements.getElement(CardElement)
 
     if (card == null) {
@@ -80,6 +75,7 @@ const CheckoutForm = ({ closeModal, bookingInfo }) => {
           },
         },
       })
+    
 
     if (confirmError) {
       console.log(confirmError)
@@ -98,6 +94,7 @@ const CheckoutForm = ({ closeModal, bookingInfo }) => {
         date: new Date(),
         
       }
+      
       delete paymentInfo._id
       console.log(paymentInfo)
       try {

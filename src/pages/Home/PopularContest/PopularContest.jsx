@@ -30,6 +30,9 @@ const PopularContest = () => {
     return (
         <section>
             <SectionTitle heading={"Popular Contest Section"}></SectionTitle>
+            <h2 className="text-xl max-w-[700px] mx-auto font-semibold text-center mb-4">
+            Check out our most popular contests that have captivated the attention of numerous participants. Join the fun and compete in our top-rated challenges.
+            </h2>
             <div className="grid md:grid-cols-2 gap-2">
                 {
                     popular.slice(0, 5).map(item => (

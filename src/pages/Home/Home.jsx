@@ -5,7 +5,6 @@ import PopularContest from "./PopularContest/PopularContest";
 import { useState } from "react";
 import img1 from '../../assets/banner1.jpg'
 import img2 from '../../assets/banner3.jpg'
-import img3 from '../../assets/banner2.jpeg'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Advertising from "./Advertising/Advertising";
@@ -25,76 +24,93 @@ const Home = () => {
                 <title>BrillianceBay | Home</title>
             </Helmet>
             <Carousel>
-            <div className="max-h-[80vh]">
-                <img className="max-h-[80vh]" src={img1} />
-                <div className="absolute left-40 top-1/2 bg-white p-6 rounded-xl">
-                    <h1 className="mb-4 text-xl font-semibold">
-                        Unleash your creativity - ultimate platform for your innovative project contests and winner selection
+                <div className="h-[80vh]">
+                    <img className="h-full" src="https://i.ibb.co/xhP6BBx/1-J4-ZQJr-Y2-Qmqk-FGs-ERT7-Qa-Q.png" />
+                    <div className="hidden md:block absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 bg-white p-6 rounded-xl">
+                        <h1 className="mb-4 text-xl font-semibold">
+                            From design competitions to coding challenges, destination for creating and participating in contests
+                        </h1>
+                        <div className="w-[400px] mx-auto">
+                            <label className="input input-bordered flex items-center gap-2">
+                                <input
+                                    type="text"
 
-                    </h1>
-                    <label className="input input-bordered flex items-center gap-2">
-                    <input
-                        type="text"
-                        
-                        className="grow"
-                        placeholder="Search"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                    />
-                    <button className="badge bg-purple-500 badge-info" onClick={handleSearch}>
-                        Search
-                    </button>
-                </label>
-                    
+                                    className="grow"
+                                    placeholder="Search with Tags"
+                                    value={searchInput}
+                                    onChange={(e) => setSearchInput(e.target.value)}
+                                />
+                                <button className="badge bg-purple-500 badge-info" onClick={handleSearch}>
+                                    Search
+                                </button>
+                            </label>
+                        </div>
+
+                    </div>
+
                 </div>
 
+                <div className="h-[80vh]">
+                    <img className="h-full" src={img1} />
+                    <div className="hidden md:block absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 bg-white p-6 rounded-xl">
+                        <h1 className="mb-4 text-xl font-semibold">
+                            Join the excitement at ContestHub, your hub for dynamic contest creation and participation
+                        </h1>
+                        <div className="w-[400px] mx-auto">
+                            <label className="input input-bordered flex items-center gap-2">
+                                <input
+                                    type="text"
 
-            </div>
-            <div className="max-h-[80vh]">
-                <img src={img2} />
-                <div className="absolute bottom-40 left-80 ml-[200px]">
+                                    className="grow"
+                                    placeholder="Search with Tags"
+                                    value={searchInput}
+                                    onChange={(e) => setSearchInput(e.target.value)}
+                                />
+                                <button className="badge bg-purple-500 badge-info" onClick={handleSearch}>
+                                    Search
+                                </button>
+                            </label>
+                        </div>
+                    </div>
 
-                <label className="input input-bordered flex items-center gap-2">
-                    <input
-                        type="text"
-                        
-                        className="grow"
-                        placeholder="Search"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                    />
-                    <button className="badge bg-purple-500 badge-info" onClick={handleSearch}>
-                        Search
-                    </button>
-                </label>
                 </div>
 
-            </div>
-            <div>
-                <img src={img3} />
-                <div className="absolute left-40 top-1/2 bg-white p-6 rounded-xl">
-                    <h1 className="mb-4 text-xl font-semibold">
-                        From design competitions to coding challenges, destination for creating and participating in contests
-                    </h1>
-                    <label className="input input-bordered flex items-center gap-2">
-                    <input
-                        type="text"
-                        
-                        className="grow"
-                        placeholder="Search"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                    />
-                    <button className="badge bg-purple-500 badge-info" onClick={handleSearch}>
-                        Search
-                    </button>
-                </label>
+                <div className="h-[80vh]">
+                    <img className="h-full" src={img2} />
+                    <div className="hidden md:block absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+
+                        <label className="input input-bordered flex items-center gap-2">
+                            <input
+                                type="text"
+
+                                className="grow"
+                                placeholder="Search with Tags"
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                            />
+                            <button className="badge bg-purple-500 badge-info" onClick={handleSearch}>
+                                Search
+                            </button>
+                        </label>
+                    </div>
+
                 </div>
 
-            </div>
+            </Carousel>
+            <label className="md:hidden absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 input input-bordered flex items-center gap-2">
+                <input
+                    type="text"
 
-        </Carousel>
-     
+                    className="grow"
+                    placeholder="Search with Tags"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                />
+                <button className="badge bg-purple-500 badge-info" onClick={handleSearch}>
+                    Search
+                </button>
+            </label>
+
             <Category searchTag={searchTag} />
             <PopularContest searchTag={searchTag} />
             <Advertising />

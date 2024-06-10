@@ -51,7 +51,7 @@ const formattedDate = format(new Date(dateString), 'dd/MM/yyyy');
                 contestDescription: data.contestDescription,
                 contestDeadline: formattedDate,
                 creator_email: user.email,
-                creator_image: user.photoURL
+                creator_photo: user.photoURL
             }
             console.log(info);
             // only creator can add  & server a api lagbe
@@ -98,7 +98,7 @@ const formattedDate = format(new Date(dateString), 'dd/MM/yyyy');
                         </div>
                         <div className="form-control w-full my-6">
                             <label className="label">
-                                <span className="label-text">Prize Money Amount*</span>
+                                <span className="label-text">Prize Money Amount* $</span>
                             </label>
                             <input
                                 type="number"
@@ -110,7 +110,7 @@ const formattedDate = format(new Date(dateString), 'dd/MM/yyyy');
                         {/* price */}
                         <div className="form-control w-full my-6">
                             <label className="label">
-                                <span className="label-text">Price*</span>
+                                <span className="label-text">Price* $</span>
                             </label>
                             <input
                                 type="number"

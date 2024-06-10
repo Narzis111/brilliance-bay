@@ -3,7 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { PiSpinner } from "react-icons/pi"
 import useAuth from '../../hooks/useAuth/useAuth'
 import toast from 'react-hot-toast'
-// import { toast } from 'react-toastify'
+
 
 const Login = () => {
   const location = useLocation()

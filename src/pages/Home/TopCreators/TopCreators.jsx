@@ -1,6 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import './TopCreators.css'; // Import custom CSS for additional styling if needed
 
 const TopCreators = () => {
     const axiosSecure = useAxiosSecure();
@@ -17,34 +27,28 @@ const TopCreators = () => {
     if (error) return <div>Error fetching top creators: {error.message}</div>;
 
     return (
-        <div>
-            <h2 className="text-xl font-semibold text-center">Top 3 Creators</h2>
-            <div className="overflow-x-auto">
-                <table className="table table-zebra">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Photo</th>
-                            <th>Creator Email</th>
-                            <th>Creator Name</th>
-                            <th>Total Participants</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {topCreators.map((creator, index) => (
-                            <tr key={creator._id}>
-                                <td>{index + 1}</td>
-                                <td>
-                                    <img src={creator.photoURL} alt={`${creator.creator_name}'s photo`} className="w-10 h-10 rounded-full" />
-                                </td>
-                                <td>{creator.creator_email}</td>
-                                <td>{creator.creator_name}</td>
-                                <td>{creator.totalParticipants}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+        <div className="top-creators-container mb-20">
+            <h2 className="text-xl font-semibold text-center mb-4">Get to know the brilliant minds behind our most successful contests. Explore contests created by our top-rated creators and see why they stand out.</h2>
+            <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={50}
+                slidesPerView={1}
+                navigation
+                pagination={{ clickable: true }}
+                scrollbar={{ draggable: true }}
+                onSwiper={(swiper) => console.log(swiper)}
+                onSlideChange={() => console.log('slide change')}
+            >
+                {topCreators.slice(0, 3).map((creator) => (
+                    <SwiperSlide key={creator._id}>
+                        <div className="flex flex-col items-center mb-20">
+                            <img src={creator.creator_photo || 'https://i.ibb.co/dpC1GPq/profile-3.jpg'} alt={`${creator.creator_name}'s photo`} className="w-20 h-20 rounded-full mb-4" />
+                            <h3 className="text-lg font-semibold">{creator.creator_email}</h3>
+                            <p>Total Participants: {creator.totalParticipants}</p>
+                        </div>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
         </div>
     );
 };

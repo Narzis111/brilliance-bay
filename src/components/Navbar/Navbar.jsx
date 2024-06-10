@@ -1,18 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
-// import { GiShoppingCart } from "react-icons/gi";
 import useAuth from "../../hooks/useAuth/useAuth";
-// import useCart from "../../hooks/useCart";
-// import useAdmin from "../../hooks/useAdmin";
 import { useEffect, useState } from "react";
 import HostModal from "../HostModal/HostModal";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { toast } from "react-toastify";
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
-  // const { isAdmin } = useAdmin();
   const axiosSecure = useAxiosSecure();
-  // const [cart] = useCart();
   const handleLogOut = () => {
     logOut()
       .then(() => { })
@@ -40,7 +35,7 @@ const Navbar = () => {
        if (data.modifiedCount > 0) {
          toast.success('Success! Please wait for admin confirmation')
        } else {
-         toast.success('Please!, Have to wait till admin approved👊')
+         toast.success('Please!, Have to wait till admin approved')
        }
      } catch (err) {
        console.log(err)
@@ -119,15 +114,16 @@ const Navbar = () => {
 
           </label>
           <div className='hidden md:block'>
-                  {/* {!user && ( */}
+                  {(!user) &&  (
                   <button
-                    // disabled={!user}
+                    disabled={!user}
                     onClick={() => setIsModalOpen(true)}
-                    className='disabled:cursor-not-allowed cursor-pointer hover:bg-neutral-100 py-3 px-4 text-sm font-semibold rounded-full  transition'
+                    className='disabled:cursor-not-allowed cursor-pointer hover:bg-neutral-100 py-3 px-4 text-sm font-semibold rounded-full transition'
                   >
                     Post your Contest
                   </button>
-                  {/* )} */}
+                  ) 
+                  } 
                 </div>
                 {/* Modal */}
                 <HostModal

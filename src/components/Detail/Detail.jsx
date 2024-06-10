@@ -39,13 +39,13 @@ const Detail = () => {
     return (
         <div>
             <div>
-            </div>
-            <div className="hero min-h-screen">
-                <div className="hero-content flex-col lg:flex-row">
-                    <div className="w-[320px] h-[300px]">
+            <div className="max-w-[780px] mx-auto mt-6 h-[300px] mb-3">
                         <img className="w-full h-full" src={image} alt={contestName} />
                     </div>
-                    <div className="space-y-6 ml-4">
+            </div>
+           
+                    
+                    <div className="text-center space-y-3">
 
                         <h1 className="text-2xl font-bold">Title: {contestName}</h1>
 
@@ -56,13 +56,13 @@ const Detail = () => {
 
 
                         <p>Detail: {contestDescription}</p>
-                        <p>Date: {contestDeadline}</p>
-                        <p>Reward: {prizeMoney}</p>
+                        <p>Last Date: {contestDeadline}</p>
+                        <p>Reward: Prizemoney: $ {prizeMoney}</p>
                         <p>Instruction: {taskSubmissionInstructions}</p>
 
                       
                          <hr />
-      <div className='p-4'>
+      <div className='p-4 max-w-[400px] mx-auto'>
        
           <Button onClick={() => setIsOpen(true)} label={'Registration'} />
       
@@ -78,7 +78,7 @@ const Detail = () => {
           user_email: user?.email,
           user_name: user?.displayName,
           user_photo: user?.photoURL
-          
+         
         }}
       />
       <hr />
@@ -88,8 +88,6 @@ const Detail = () => {
       </div>
     </div>
 
-                    </div>
-                </div>
             </div>
        
     );
