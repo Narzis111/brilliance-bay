@@ -2,11 +2,6 @@
 
 Welcome to BrillianceBay, the ultimate platform where innovation meets recognition! BrillianceBay ContestHub is a dynamic and user-friendly Project Contest Creation Platform designed to foster creativity, engage communities, and celebrate talent across various domains.
 
-## Admin Credentials
-
-- **Email:** admin@brilliance.com
-- **Password:** 123@Zx
-
 ## Live Site URL
 
 [BrillianceBay](https://final-project-client-d376e.web.app/)
